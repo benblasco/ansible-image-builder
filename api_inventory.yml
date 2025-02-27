@@ -1,6 +1,10 @@
 ---
+# Inventory format for localhost sourced from:
+# https://stackoverflow.com/questions/77649468/how-do-you-specify-localhost-in-an-ansible-yaml-file
 all:
-  hosts:
-    localhost:
-      ansible_connection: local
+  children:
+    ungrouped:
+      hosts:
+        localhost:
+          ansible_connection: local
 ...
