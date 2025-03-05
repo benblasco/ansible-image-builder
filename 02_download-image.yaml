@@ -21,7 +21,18 @@
         name: image_builder
         tasks_from: verify-compose-finished
 
+    - name: Mount NFS filesystem for download
+      ansible.builtin.import_role:
+        name: image_builder
+        tasks_from: mount-nfs
+
     - name: Download images
       ansible.builtin.import_role:
         name: image_builder
         tasks_from: download-images
+
+    - name: Unmount NFS filesystem for download
+      ansible.builtin.import_role:
+        name: image_builder
+        tasks_from: unmount-nfs
+
