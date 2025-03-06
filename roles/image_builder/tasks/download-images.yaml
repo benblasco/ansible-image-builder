@@ -8,9 +8,9 @@
   ansible.builtin.debug:
     msg: "Variable storage_dir is {{ storage_dir }}"
 
-- name: Print the isolation paths (defined in AAP job settings)
-  ansible.builtin.debug:
-    msg: "Variable AWX_ISOLATION_SHOW_PATHS is {{ AWX_ISOLATION_SHOW_PATHS }}"
+#- name: Print the isolation paths (defined in AAP job settings)
+  #ansible.builtin.debug:
+    #msg: "Variable AWX_ISOLATION_SHOW_PATHS is {{ AWX_ISOLATION_SHOW_PATHS }}"
 
 - name: Start image download
   ansible.builtin.get_url:
