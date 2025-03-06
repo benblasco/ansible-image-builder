@@ -4,7 +4,7 @@ release_id: "pr{{ awx_webhook_payload.pull_request.number }}"
 release_date: "2025-02-12"
 
 # Save images in persistent storage configured on the execution environment
-storage_dir: /var/mnt/vm_images
+storage_dir: /var/games
 nfs_server: nuc.lan
 
 # Basic structures to reuse between images
