@@ -1,4 +1,14 @@
 ---
+- name: Create mount point for vm_images filesystem
+  file:
+    path: /mnt/vm_images
+    state: directory
+    mode: '0755'
+    #owner: root
+    #group: root
+  tags:
+    - nfs
+
 - name: Mount the filesystem into the EE
   ansible.posix.mount:
     src: "{{ nfs_server }}:{{ storage_dir }}"
