@@ -48,3 +48,12 @@
     label: "{{ item.item.json.request.image_name | default('N/A') }}"
   vars:
     jobid: "{{ item.ansible_job_id | default(false) }}"
+
+- name: Get stats of a file
+  ansible.builtin.stat:
+    path: "{{ storage_dir | default('.') }}/{{ item.json.request.image_name }}{{ release_str | default('') }}.qcow2"
+  register: file_status
+
+- name: Show the file status
+  ansible.builtin.debug:
+    msg: "File Status is: {{ file_status }}"
