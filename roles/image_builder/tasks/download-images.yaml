@@ -12,9 +12,9 @@
   #ansible.builtin.debug:
     #msg: "Variable AWX_ISOLATION_SHOW_PATHS is {{ AWX_ISOLATION_SHOW_PATHS }}"
     
-- name: Pause for 5 minutes to help debugging
-  ansible.builtin.pause:
-    minutes: 5
+#- name: Pause for 5 minutes to help debugging
+  #ansible.builtin.pause:
+    #minutes: 5
 
 - name: Start image download
   ansible.builtin.get_url:
