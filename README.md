@@ -615,3 +615,68 @@ skipping: [localhost] => (item=33633066-1fae-4a59-8a83-7580210e02e8)
 PLAY RECAP *******************************************************************************************************
 localhost                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
+
+## Running jobs within AAP
+
+### Custom credential for the redhat.com token
+
+1. Create a new credential type following this definition:
+```
+  - name: rh_offline_token
+    kind: cloud
+    description: Creates an offline token as per https://access.redhat.com/management/api
+    inputs:
+      fields:
+        - id: vault_offline_token 
+          type: string
+          label: API Token for redhat.com
+          secret: true
+    injectors:
+      env:
+        VAULT_OFFLINE_TOKEN: !unsafe '{{ vault_offline_token }}'
+      extra_vars:
+        vault_offline_token: !unsafe '{{ vault_offline_token }}'
+```
+
+2. Create a new credential following this definition
+```
+  - name: image_builder_token
+    credential_type: rh_offline_token
+    organization: config_as_code
+    description: Red Hat offline token for redhat.com
+    inputs:
+      vault_offline_token: "{{ vault_offline_token }}"
+```
+
+3. Populate the image_builder_token credential with the appropriate token
+
+4. Ensure that any job template contacting redhat.com has the credential added
+
+### Mounting persistent storage for the download of new images in containerised AAP deployments
+
+This requires a work-around to the following bugs:
+
+[BUG - 'Paths to expose to isolated jobs' setting doesn't work within containerized version of AAP](https://issues.redhat.com/browse/AAP-37599)
+
+[custom AWX_ISOLATION_SHOW_PATHS setting is not mounting custom directories into EE when running jobs](https://issues.redhat.com/browse/AAP-38538)
+
+From issue "AAP-37599":
+"It turns out that `ansible-runner` will check the source directory (https://github.com/ansible/ansible-runner/blob/devel/src/ansible_runner/config/_base.py#L401-L403) to see if it exists. If it doesn't, then it will log a message and exit out of the function. Essentially, if the path specified in `Settings -> Job -> Paths to expose to isolated jobs` does not live within the `receptor` container, then it will not be included in the mount options for the `podman` command."
+
+What you need to do to deal with this:
+1. Mount your persistent storage to `/var/games` if persistent storage is required. I use `/var/games` because this directory exists both on the AAP host and in the default EE these job templates are using.
+2. In AAP Controller -> Settings -> Job Settings, add the following path to "Paths to expose to isolated jobs":
+    `"/usr/share/pki:/usr/share/pki:O",`
+
+    e.g.
+    ```
+    [
+      "/etc/pki/ca-trust:/etc/pki/ca-trust:O",
+      "/usr/share/pki:/usr/share/pki:O",
+      "/var/games:/var/games:rw"
+    ]
+```
+
+3. Ensure that your `storage_dir` variable (likely defined in `group_vars/all/image_definitions.yaml`) matches the same path:
+`storage_dir: /var/games`
+4. Images will now be downloaded to persistent storage, allowing you to use them in subsequent job template runs.
