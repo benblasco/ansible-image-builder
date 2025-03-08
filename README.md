@@ -668,7 +668,7 @@ From issue "AAP-37599":
 What you need to do to deal with this:
 1. Mount your persistent storage to `/var/games` if persistent storage is required. I use `/var/games` because this directory exists (and is empty) both on the AAP host and in the default EE these job templates are using.
 2. In AAP Controller -> Settings -> Job Settings, add the following path to "Paths to expose to isolated jobs":
-    `"/usr/share/pki:/usr/share/pki:O",`
+    `"/var/games:/var/games:rw",`
 
     e.g.
     ```
