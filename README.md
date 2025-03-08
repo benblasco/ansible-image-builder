@@ -677,7 +677,7 @@ What you need to do to deal with this:
       "/usr/share/pki:/usr/share/pki:O",
       "/var/games:/var/games:rw"
     ]
-```
+    ```
 
 3. Ensure that your `storage_dir` variable (likely defined in `group_vars/all/image_definitions.yaml`) matches the same path:
 `storage_dir: /var/games`
