@@ -33,7 +33,6 @@ packages:
     - ipa-client
     - openscap-scanner
     - firewalld
-    - vim
   lamp:
     - httpd
     - mariadb-server
